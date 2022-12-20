@@ -1,4 +1,5 @@
 ﻿using Ocluse.LiquidSnow.Core.Cqrs.Internal;
+using Ocluse.LiquidSnow.Core.Mediator.Internal;
 using System;
 
 namespace Ocluse.LiquidSnow.Core.Mediator
@@ -29,8 +30,8 @@ namespace Ocluse.LiquidSnow.Core.Mediator
         /// <param name="serviceProvider">The provider for command and query handlers</param>
         public static IMediator Build(IServiceProvider serviceProvider)
         {
-            CommandDispatcher commands = new(serviceProvider);
-            QueryDispatcher queries = new(serviceProvider);
+            CommandDispatcher commands = new CommandDispatcher(serviceProvider);
+            QueryDispatcher queries = new QueryDispatcher(serviceProvider);
             return new Internal.Mediator(commands, queries, serviceProvider);
         }
     }

@@ -54,7 +54,7 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         {
             if (source.Length == 0) return string.Empty;
 
-            StringBuilder builder = new();
+            StringBuilder builder = new StringBuilder();
 
             for (var i = 0; i < source.Length; i++)
             {

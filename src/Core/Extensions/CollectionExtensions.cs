@@ -94,20 +94,20 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         }
 
         /// <summary>
-        /// Returns a random item from the collection, or default
+        /// Returns a random item from the sequence. If the seqeunce is empty, an exception is thrown.
         /// </summary>
-        public static T? Random<T>(this IEnumerable<T> source, Func<T, bool> expression)
+        public static T Random<T>(this IEnumerable<T> source, Func<T, bool> expression)
         {
             return source.Where(expression).Random();
         }
 
         /// <summary>
-        /// Returns a random item from the collection, or default
+        /// Returns a random item from the sequence. If the sequence is empty, an exception is thrown.
         /// </summary>
-        public static T? Random<T>(this IEnumerable<T> source)
+        public static T Random<T>(this IEnumerable<T> source)
         {
-            List<T> copy = new(source);
-            if (copy.Count == 0) return default;
+            List<T> copy = new List<T>(source);
+            if (copy.Count == 0) throw new InvalidOperationException("Sequence contains no elements");
             if (copy.Count > 1)
             {
                 copy.Shuffle();

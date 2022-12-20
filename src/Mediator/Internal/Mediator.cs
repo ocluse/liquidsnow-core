@@ -1,7 +1,7 @@
 ﻿using System;
-using Ocluse.LiquidSnow.Core.Cqrs.Mediator;
+using Ocluse.LiquidSnow.Core.Cqrs;
 
-namespace Ocluse.LiquidSnow.Core.Cqrs.Internal
+namespace Ocluse.LiquidSnow.Core.Mediator.Internal
 {
     internal class Mediator : IMediator
     {
@@ -9,7 +9,7 @@ namespace Ocluse.LiquidSnow.Core.Cqrs.Internal
 
         public IQueryDispatcher Queries { get; }
 
-        public IServiceProvider Services {get;}
+        public IServiceProvider Services { get; }
 
         public Mediator(ICommandDispatcher commands, IQueryDispatcher queries, IServiceProvider services)
         {

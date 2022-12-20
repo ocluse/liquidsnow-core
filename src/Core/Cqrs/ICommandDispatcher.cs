@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Ocluse.LiquidSnow.Core.Cqrs
 {
     /// <summary>
-    /// Dispatches utility methods to dispatch commands
+    /// Utility methods to dispatch commands
     /// </summary>
     public interface ICommandDispatcher
     {
