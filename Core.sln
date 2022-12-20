@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocluse.LiquidSnow.Core", "src\Ocluse.LiquidSnow.Core.csproj", "{B088269F-A02E-4EC2-8413-40F518001A05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ocluse.LiquidSnow.Core", "src\Core\Ocluse.LiquidSnow.Core.csproj", "{B088269F-A02E-4EC2-8413-40F518001A05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocluse.LiquidSnow.Core.DependencyInjection", "src\DependencyInjection\Ocluse.LiquidSnow.Core.DependencyInjection.csproj", "{A1F580C6-C04F-4C79-8C39-57AFA5F6CF6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B088269F-A02E-4EC2-8413-40F518001A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B088269F-A02E-4EC2-8413-40F518001A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B088269F-A02E-4EC2-8413-40F518001A05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1F580C6-C04F-4C79-8C39-57AFA5F6CF6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1F580C6-C04F-4C79-8C39-57AFA5F6CF6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1F580C6-C04F-4C79-8C39-57AFA5F6CF6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1F580C6-C04F-4C79-8C39-57AFA5F6CF6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
