@@ -7,4 +7,10 @@
     public interface ICommand<TCommandResult>
     {
     }
+
+    ///<inheritdoc cref="ICommand{TCommandResult}"/>
+    public interface ICommand : ICommand<Unit>
+    {
+        
+    }
 }

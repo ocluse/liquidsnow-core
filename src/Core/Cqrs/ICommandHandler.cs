@@ -18,4 +18,10 @@ namespace Ocluse.LiquidSnow.Core.Cqrs
         /// <returns>The result of the command's execution</returns>
         Task<TCommandResult> Handle(TCommand command, CancellationToken cancellationToken = default);
     }
+
+    ///<inheritdoc cref="ICommandHandler{TCommand, TCommandResult}"/>
+    public interface ICommandHandler<in TCommand> where TCommand : ICommand
+    {
+
+    }
 }

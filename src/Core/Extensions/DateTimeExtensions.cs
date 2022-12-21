@@ -2,6 +2,9 @@
 
 namespace Ocluse.LiquidSnow.Core.Extensions
 {
+    /// <summary>
+    /// Adds extensions to <see cref="DateTime"/>
+    /// </summary>
     public static class DateTimeExtensions
     {
         /// <summary>
