@@ -5,10 +5,10 @@
     <Nullable>enable</Nullable>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <Version>0.0.4</Version>
+	  <Version>0.0.5</Version>
 	  <Authors>Ocluse</Authors>
 	  <PackageOutputPath>..\..\build</PackageOutputPath>
-	  <Description>Useful extensions and utilities for a wide range of scenarios.</Description>
+	  <Description>Provides a basic mediator pattern implementation for use with CQRS pattern provided in Ocluse.LiquidSnow.Core.</Description>
 	  <PackageIcon>logo.png</PackageIcon>
 	  <RepositoryUrl>https://github.com/ocluse/liquidsnow-core</RepositoryUrl>
 	  <Copyright>© Ocluse</Copyright>

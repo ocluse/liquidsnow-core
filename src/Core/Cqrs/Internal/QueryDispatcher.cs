@@ -20,9 +20,12 @@ namespace Ocluse.LiquidSnow.Core.Cqrs.Internal
 
             var methodInfo = queryHandlerType.GetMethod("Handle") ?? throw new InvalidOperationException("Handle method not found on handler");
 
-            //using IServiceScope scope = _serviceProvider.CreateScope();
-
             var handler = _serviceProvider.GetService(queryHandlerType);
+
+            if (handler == null)
+            {
+                throw new InvalidOperationException("Failed to get handler for query");
+            }
 
             return (Task<TQueryResult>?)methodInfo.Invoke(handler, new object[] { query, cancellationToken }) ?? throw new InvalidOperationException("Illegal handle method");
 

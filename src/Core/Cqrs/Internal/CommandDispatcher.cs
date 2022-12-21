@@ -14,13 +14,13 @@ namespace Ocluse.LiquidSnow.Core.Cqrs.Internal
         {
             Type commandType = command.GetType();
 
-            Type[] typeArgs = { commandType, typeof(TCommandResult) };
+            Type[] typeArgs = { commandType, typeof(TCommandResult) }; 
 
             Type commandHandlerType = typeof(ICommandHandler<,>).MakeGenericType(typeArgs);
 
             var methodInfo = commandHandlerType.GetMethod("Handle") ?? throw new InvalidOperationException("Handle method not found on handler");
 
-            object? handler = _serviceProvider.GetService(commandType);
+            object? handler = _serviceProvider.GetService(commandHandlerType);
 
             if (handler == null)
             {
