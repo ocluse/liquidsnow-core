@@ -20,7 +20,7 @@ namespace Ocluse.LiquidSnow.Core.Cqrs
     }
 
     ///<inheritdoc cref="ICommandHandler{TCommand, TCommandResult}"/>
-    public interface ICommandHandler<in TCommand> where TCommand : ICommand
+    public interface ICommandHandler<in TCommand> : ICommandHandler<TCommand, Unit> where TCommand : ICommand
     {
 
     }
