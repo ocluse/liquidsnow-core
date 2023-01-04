@@ -245,6 +245,68 @@ namespace Ocluse.LiquidSnow.Core.Extensions
             return false;
         }
 
-        
+        /// <summary>
+        /// Returns a neatly formatted string representing the size of a file e.g 8MB.
+        /// </summary>
+        /// <param name="size">The size of the file in bytes</param>
+        /// <param name="decimals">The number of decimal places that can be displayed</param>
+        public static string ToFileSizeReadable(this long size, uint decimals = 2)
+        {
+            // Get absolute value
+            long absolute_i = (size < 0 ? -size : size);
+            // Determine the suffix and readable value
+            string suffix;
+            double readable;
+            if (absolute_i >= 0x1000000000000000) // Exabyte
+            {
+                suffix = "EB";
+                readable = (size >> 50);
+            }
+            else if (absolute_i >= 0x4000000000000) // Petabyte
+            {
+                suffix = "PB";
+                readable = (size >> 40);
+            }
+            else if (absolute_i >= 0x10000000000) // Terabyte
+            {
+                suffix = "TB";
+                readable = (size >> 30);
+            }
+            else if (absolute_i >= 0x40000000) // Gigabyte
+            {
+                suffix = "GB";
+                readable = (size >> 20);
+            }
+            else if (absolute_i >= 0x100000) // Megabyte
+            {
+                suffix = "MB";
+                readable = (size >> 10);
+            }
+            else if (absolute_i >= 0x400) // Kilobyte
+            {
+                suffix = "KB";
+                readable = size;
+            }
+            else
+            {
+                return size.ToString("0B"); // Byte
+            }
+            // Divide by 1024 to get fractional value
+            readable /= 1024;
+            // Return formatted number with suffix
+
+            if (decimals == 0)
+            {
+                return $"{((int)readable)}{suffix}";
+            }
+
+            StringBuilder builder = new StringBuilder("0.");
+
+            for (int i = 0; i < decimals; i++)
+            {
+                builder.Append('#');
+            }
+            return $"{readable.ToString(builder.ToString())}{suffix}";
+        }
     }
 }
