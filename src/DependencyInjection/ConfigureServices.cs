@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Ocluse.LiquidSnow.Core.Cqrs;
 using Ocluse.LiquidSnow.Core.Cqrs.Internal;
+using Ocluse.LiquidSnow.Core.Events;
+using Ocluse.LiquidSnow.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,17 +16,9 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
     /// </summary>
     public static class ConfigureServices
     {
+        #region CQRS
         /// <summary>
-        /// Adds CQRS handlers from the current assembly using the default configuration.
-        /// </summary>
-        public static IServiceCollection AddCqrs(this IServiceCollection services)
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            return services.AddCqrs(assembly);
-        }
-
-        /// <summary>
-        /// Adds CQRS handlers from the provided assemblies using defautl configuration.
+        /// Adds CQRS handlers from the provided assemblies using default configuration.
         /// </summary>
         public static IServiceCollection AddCqrs(this IServiceCollection services, params Assembly[] assemblies)
         {
@@ -66,8 +60,54 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
 
             return services;
         }
-       
-        private static IServiceCollection AddImplementers(this IServiceCollection services, Type type, Assembly assembly, ServiceLifetime lifetime)
+        #endregion
+
+        #region EVENT BUS
+        /// <summary>
+        /// Adds the Event Bus and event handlers from the provided assemblies using the default configuration
+        /// </summary>
+        public static IServiceCollection AddEventBus(this IServiceCollection services, params Assembly[] assemblies)
+        {
+            return services.AddEventBus(options =>
+            {
+                options.Assemblies.AddRange(assemblies);
+            });
+        }
+
+        /// <summary>
+        /// Adds the Event Bus and event handlers using the provided options.
+        /// </summary>
+        public static IServiceCollection AddEventBus(this IServiceCollection services, Action<EventBusOptions> configureOptions)
+        {
+            EventBusOptions options = new EventBusOptions();
+            configureOptions.Invoke(options);
+
+            if (options.Assemblies.Count < 1)
+            {
+                throw new InvalidOperationException("You must provide at least one assembly to source event handlers");
+            }
+
+            ServiceDescriptor eventBusDescriptor = new ServiceDescriptor(typeof(IEventBus), typeof(MultiEventBus), options.EventBusLifetime);
+
+            services.TryAdd(eventBusDescriptor);
+
+            foreach (var assembly in options.Assemblies)
+            {
+                services.AddImplementers(typeof(IEventHandler<>), assembly, options.HandlerLifetime, false);
+            }
+
+            //Add publishing strategy
+            PublishStrategyConfig publishStrategyConfig = new PublishStrategyConfig(options.PublishStrategy);
+
+            services.TryAddSingleton(publishStrategyConfig);
+
+            return services;
+        }
+
+
+        #endregion
+
+        private static IServiceCollection AddImplementers(this IServiceCollection services, Type type, Assembly assembly, ServiceLifetime lifetime, bool ignoreDuplicates = true)
         {
             List<ServiceDescriptor> descriptors = new List<ServiceDescriptor>();
             assembly.GetTypes()
@@ -82,8 +122,15 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
                     descriptors.Add(descriptor);
                 });
 
-            services.TryAdd(descriptors);
-
+            if (ignoreDuplicates)
+            {
+                services.TryAdd(descriptors);
+            }
+            else
+            {
+                services.AddRange(descriptors);
+            }
+            
             return services;
         }
     }

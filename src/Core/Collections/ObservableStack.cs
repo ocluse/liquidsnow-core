@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace Ocluse.LiquidSnow.Core.Models
+namespace Ocluse.LiquidSnow.Core.Collections
 {
     /// <summary>
     /// A see <see cref="Stack{T}"/> that raises events when changed.

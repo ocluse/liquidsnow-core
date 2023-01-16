@@ -1,4 +1,5 @@
 ﻿using Ocluse.LiquidSnow.Core.Cqrs.Internal;
+using Ocluse.LiquidSnow.Core.Events.Internal;
 using Ocluse.LiquidSnow.Core.Mediator.Internal;
 using System;
 
@@ -32,7 +33,8 @@ namespace Ocluse.LiquidSnow.Core.Mediator
         {
             CommandDispatcher commands = new CommandDispatcher(serviceProvider);
             QueryDispatcher queries = new QueryDispatcher(serviceProvider);
-            return new Internal.Mediator(commands, queries, serviceProvider);
+            EventBus events = new EventBus(serviceProvider);
+            return new Internal.Mediator(commands, queries, events, serviceProvider);
         }
     }
 

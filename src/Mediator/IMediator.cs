@@ -1,4 +1,5 @@
 ﻿using Ocluse.LiquidSnow.Core.Cqrs;
+using Ocluse.LiquidSnow.Core.Events;
 using System;
 
 namespace Ocluse.LiquidSnow.Core.Mediator
@@ -22,5 +23,10 @@ namespace Ocluse.LiquidSnow.Core.Mediator
         /// The service provider used by this mediator to resolve its handlers
         /// </summary>
         IServiceProvider Services { get; }
+
+        /// <summary>
+        /// The event bus provided by this mediator, used to publish events
+        /// </summary>
+        IEventBus Events { get; }
     }
 }

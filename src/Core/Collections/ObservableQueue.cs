@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace Ocluse.LiquidSnow.Core.Models
+namespace Ocluse.LiquidSnow.Core.Collections
 {
     /// <summary>
     /// A <see cref="Queue{T}"/> that raises events whenever it is modified through queueing or dequeuing.
