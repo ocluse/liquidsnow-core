@@ -129,15 +129,20 @@ namespace Ocluse.LiquidSnow.Core.Extensions
 
 
         /// <summary>
-        /// Removes all the items provided from the collection
+        /// Removes all the items provided from the collection, returning the number of items removed
         /// </summary>
-        public static void RemoveAll<T>(this ICollection<T> collection, IEnumerable<T> items)
+        public static int RemoveAll<T>(this ICollection<T> collection, IEnumerable<T> items)
         {
-            if (items == null) return;
+            int removed = 0;
             foreach (var i in items)
             {
-                collection.Remove(i);
+                if (collection.Remove(i))
+                {
+                    removed++;
+                }
             }
+
+            return removed;
         }
 
         /// <summary>
@@ -147,13 +152,17 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         public static int RemoveAll<T>(this ICollection<T> collection, Func<T, bool> predicate)
         {
             var removable = collection.Where(predicate).ToList();
+            int removed = 0;
 
             foreach (var itemToRemove in removable)
             {
-                collection.Remove(itemToRemove);
+                if (collection.Remove(itemToRemove))
+                {
+                    removed++;
+                }
             }
 
-            return removable.Count;
+            return removed;
         }
 
         /// <summary>
