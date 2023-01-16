@@ -18,15 +18,6 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
     {
         #region CQRS
         /// <summary>
-        /// Adds CQRS handlers from the executing assembly using the default configuration.
-        /// </summary>
-        public static IServiceCollection AddCqrs(this IServiceCollection services)
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            return services.AddCqrs(assembly);
-        }
-
-        /// <summary>
         /// Adds CQRS handlers from the provided assemblies using default configuration.
         /// </summary>
         public static IServiceCollection AddCqrs(this IServiceCollection services, params Assembly[] assemblies)
@@ -72,16 +63,6 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
         #endregion
 
         #region EVENT BUS
-
-        /// <summary>
-        /// Add the Event Bus and event handlers from the executing assembly using the default configuration
-        /// </summary>
-        public static IServiceCollection AddEventBus(this IServiceCollection services)
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            return services.AddEventBus(assembly);
-        }
-
         /// <summary>
         /// Adds the Event Bus and event handlers from the provided assemblies using the default configuration
         /// </summary>
