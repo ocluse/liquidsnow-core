@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>0.0.6</Version>
+		<Version>0.0.7</Version>
 		<Authors>Ocluse</Authors>
 		<PackageOutputPath>..\..\build</PackageOutputPath>
 		<Description>Useful extensions and utilities for a wide range of scenarios. Includes code to implement CQRS pattern as well.</Description>
@@ -22,8 +22,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="Ocluse.LiquidSnow.Core.DependencyInjection"/>
-		<InternalsVisibleTo Include="Ocluse.LiquidSnow.Core.Mediator"/>
+		<InternalsVisibleTo Include="Ocluse.LiquidSnow.Core.DependencyInjection" />
+		<InternalsVisibleTo Include="Ocluse.LiquidSnow.Core.Mediator" />
 	</ItemGroup>
 
 </Project>

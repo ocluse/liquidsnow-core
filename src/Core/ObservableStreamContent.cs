@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace Ocluse.LiquidSnow.Core.Models
+namespace Ocluse.LiquidSnow.Core
 {
     /// <summary>
     /// <see cref="HttpContent"/> that implements see <see cref="INotifyPropertyChanged"/> that can be used to determine the progress of a stream transfer.

@@ -1,4 +1,5 @@
 ﻿using Ocluse.LiquidSnow.Core.Cqrs;
+using Ocluse.LiquidSnow.Core.Events;
 
 namespace Ocluse.LiquidSnow.Core.Mediator.Internal
 {
@@ -15,6 +16,18 @@ namespace Ocluse.LiquidSnow.Core.Mediator.Internal
         public IMediatorBuilderOptions AddHandler<TCommand, TResult>(ICommandHandler<TCommand, TResult> handler) where TCommand : ICommand<TResult>
         {
             _serviceProvider.AddService(typeof(ICommandHandler<TCommand, TResult>), handler);
+            return this;
+        }
+
+        public IMediatorBuilderOptions AddHandler<TCommand>(ICommandHandler<TCommand> handler) where TCommand : ICommand
+        {
+            _serviceProvider.AddService(typeof(ICommandHandler<TCommand>), handler);
+            return this;
+        }
+
+        public IMediatorBuilderOptions AddHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent
+        {
+            _serviceProvider.AddService(typeof(IEventHandler<TEvent>), handler);
             return this;
         }
 

@@ -18,7 +18,9 @@ namespace Ocluse.LiquidSnow.Core.Cqrs.Internal
 
             Type queryHandlerType = typeof(IQueryHandler<,>).MakeGenericType(typeArgs);
 
-            var methodInfo = queryHandlerType.GetMethod("Handle") ?? throw new InvalidOperationException("Handle method not found on handler");
+            Type[] paramTypes = new Type[] { queryType, typeof(CancellationToken) };
+
+            var methodInfo = queryHandlerType.GetMethod("Handle", paramTypes) ?? throw new InvalidOperationException("Handle method not found on handler");
 
             var handler = _serviceProvider.GetService(queryHandlerType);
 

@@ -246,7 +246,7 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         }
 
         /// <summary>
-        /// Returns a neatly formatted string representing the size of a file e.g 8MB.
+        /// Returns a neatly formatted string representing the size of a file/stream e.g 8MB.
         /// </summary>
         /// <param name="size">The size of the file in bytes</param>
         /// <param name="decimals">The number of decimal places that can be displayed</param>

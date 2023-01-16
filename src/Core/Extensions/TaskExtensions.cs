@@ -59,5 +59,25 @@ namespace Ocluse.LiquidSnow.Core.Extensions
                 throw new TimeoutException("The operation has timed out.");
             }
         }
+
+        /// <summary>
+        /// A workaround for getting all of AggregateException.InnerExceptions with try/await/catch
+        /// </summary>
+        /// <remarks>
+        /// Answer was originally posted on  <see href="https://stackoverflow.com/a/62607500/6701056">StackOverflow</see>
+        /// </remarks>
+        public static Task WithAggregatedExceptions(this Task task)
+        {
+            // using AggregateException.Flatten as a bonus
+            return task.ContinueWith(
+                continuationFunction: anteTask =>
+                    anteTask.IsFaulted &&
+                    anteTask.Exception is AggregateException ex &&
+                    (ex.InnerExceptions.Count > 1 || ex.InnerException is AggregateException) ?
+                    Task.FromException(ex.Flatten()) : anteTask,
+                cancellationToken: CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously,
+                scheduler: TaskScheduler.Default).Unwrap();
+        }
     }
 }
