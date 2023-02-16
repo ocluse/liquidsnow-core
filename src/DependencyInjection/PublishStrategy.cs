@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ocluse.LiquidSnow.Core.DependencyInjection
+﻿namespace Ocluse.LiquidSnow.Core.DependencyInjection
 {
     /// <summary>
     /// Specifies the how an event bus invokes event handlers

@@ -1,7 +1,6 @@
 ﻿using Ocluse.LiquidSnow.Core.Events;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Ocluse.LiquidSnow.Core
 {
