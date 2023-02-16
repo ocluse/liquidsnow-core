@@ -90,6 +90,14 @@ namespace Ocluse.LiquidSnow.Core.Extensions
             Array.Copy(array, startIndex, result, 0, length);
             return result;
         }
+        
+        /// <summary>
+        /// Gets the bytes of a string when encoded using UTF8
+        /// </summary>
+        public static byte[] GetBytes(this string? str)
+        {
+            return Encoding.UTF8.GetBytes(str);
+        }
 
         /// <summary>
         /// Gets the bytes of a string when encoded using the specified method
@@ -120,6 +128,15 @@ namespace Ocluse.LiquidSnow.Core.Extensions
             }
 
             throw new ArgumentException("The encoding provided is unkown/unsupported");
+        }
+
+        /// <summary>
+        /// Gets the string represented by a byte array using UTF8 encoding
+        /// </summary>
+        /// <returns>A string represented by the encoding in bytes</returns>
+        public static string GetString(this byte[] ba)
+        {
+            return Encoding.UTF8.GetString(ba);
         }
 
         /// <summary>

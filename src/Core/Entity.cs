@@ -1,14 +1,13 @@
 ﻿using Ocluse.LiquidSnow.Core.Events;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Ocluse.LiquidSnow.Core
 {
     ///<inheritdoc cref="IEntity"/>
     public abstract class Entity : IEntity
     {
-        private readonly List<IEvent> _attachedEntities = new List<IEvent>();
+        private readonly List<IEvent> _attachedEvents = new List<IEvent>();
 
         ///<inheritdoc cref="IEntity.Id"/>
         public abstract string Id { get; set; }
@@ -22,7 +21,7 @@ namespace Ocluse.LiquidSnow.Core
         /// <param name="ev">The event to add</param>
         public void AddAttachedEvent(IEvent ev)
         {
-            _attachedEntities.Add(ev);
+            _attachedEvents.Add(ev);
         }
 
         /// <summary>
@@ -31,7 +30,7 @@ namespace Ocluse.LiquidSnow.Core
         /// <param name="ev">The event to remove</param>
         public void RemoveAttachedEvent(IEvent ev)
         {
-            _attachedEntities.Remove(ev);
+            _attachedEvents.Remove(ev);
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace Ocluse.LiquidSnow.Core
         /// </summary>
         public void ClearAttachedEvents()
         {
-            _attachedEntities.Clear();
+            _attachedEvents.Clear();
         }
 
         /// <summary>
@@ -49,7 +48,7 @@ namespace Ocluse.LiquidSnow.Core
 
         public IReadOnlyList<IEvent> GetAttachedEvents()
         {
-            return _attachedEntities;
+            return _attachedEvents;
         }
     }
 
