@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>0.0.8</Version>
+		<Version>0.0.9</Version>
 		<Authors>Ocluse</Authors>
 		<PackageOutputPath>..\..\build</PackageOutputPath>
 		<Description>Useful extensions and utilities for a wide range of scenarios. Includes code to implement CQRS pattern as well.</Description>
