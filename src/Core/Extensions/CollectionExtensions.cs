@@ -33,6 +33,35 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         }
 
         /// <summary>
+        /// Checks for a duplicate item in a list
+        /// </summary>
+        /// <remarks>
+        /// Solution sourced from StackOverFlow => https://stackoverflow.com/questions/18303897/test-if-all-values-in-a-list-are-unique
+        /// </remarks>
+        public static bool HasDuplicate<T>(this IEnumerable<T> source, out T firstDuplicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            var checkBuffer = new HashSet<T>();
+            foreach (var t in source)
+            {
+                if (checkBuffer.Add(t))
+                {
+                    continue;
+                }
+
+                firstDuplicate = t;
+                return true;
+            }
+
+            firstDuplicate = default(T);
+            return false;
+        }
+
+        /// <summary>
         /// Moves an item in the list to the specified index
         /// </summary>
         /// <param name="list">The list to perform the operation on</param>
