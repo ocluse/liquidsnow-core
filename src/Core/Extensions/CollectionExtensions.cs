@@ -35,9 +35,7 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         /// <summary>
         /// Checks for a duplicate item in a list
         /// </summary>
-        public static bool HasDuplicate<T>(
-                this IEnumerable<T> source,
-                out T firstDuplicate)
+        public static bool HasDuplicate<T>(this IEnumerable<T> source, out T firstDuplicate)
         {
             if (source == null)
             {
