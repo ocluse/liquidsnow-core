@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <Version>0.0.8</Version>
+	  <Version>0.0.9</Version>
 	  <Authors>Ocluse</Authors>
 	  <PackageOutputPath>..\..\build</PackageOutputPath>
 	  <Description>Utilities necessary to use dependency injection for CQRS patterns in Ocluse.LiquidSnow.Core</Description>
