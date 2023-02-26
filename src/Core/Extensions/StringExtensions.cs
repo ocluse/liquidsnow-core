@@ -11,106 +11,88 @@ namespace Ocluse.LiquidSnow.Core.Extensions
     public static class StringExtensions
     {
         /// <summary>
-        /// Converts a string to the block format, where the first letter is capitalized and the rest are converted to small letters.
-        /// </summary>
-        /// <returns>A string that has been converted to block format</returns>
-        public static string ToBlock(this string? s)
-        {
-            // Check for empty string.  
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-            // Return char and concat substring.  
-            return char.ToUpper(s[0]) + s[1..].ToLower();
-        }
-
-        /// <summary>
-        /// Converts a string to the KebabCase where saces are replaced with dashes.
+        /// Transform a string in Pascal case to the equivalent Kebab case.
         /// </summary>
         /// <remarks>
-        /// The returned string will always be lowercase. The method also inserts a dash between two capitalised letters, for example HelloWorld becomes hello-world.
+        /// By default, numbers are separated by a dash. For example, 'WhereIsMyMother1' becomes 'where-is-my-mother-1'.
+        /// This behaviour can be controlled by the <paramref name="numberDashing"/> parameter.
         /// </remarks>
-        /// <returns>The current string in Kebab case</returns>
-        public static string? PascalToKebabCase(this string? value)
-        {
-            return value == null
-                    ? null
-                    : Regex.Replace(value,
-                                     "([a-z])([A-Z])",
-                                     "$1-$2",
-                                     RegexOptions.CultureInvariant,
-                                     TimeSpan.FromMilliseconds(100)).ToLowerInvariant().Replace(' ', '-');
-        }
-
-        /// <summary>
-        /// Transform strings to Kebab case. This method places dashes between numbers.
-        /// </summary>
-        /// <remarks>
-        /// This method is an alternative of <see cref="PascalToKebabCase(string?)"/>. It assumes the string is in Pascal case</remarks>
-        /// <param name="source"></param>
+        /// <param name="value">The string to transform to kebab case</param>
+        /// <param name="numberDashing">If true, adds a dash at the start of digits</param>
+        /// <param name="cultureInfo">The culture to use, if unspecified, uses the invariant culture.</param>
         /// <returns>The current string in Kebab case.</returns>
-        public static string? PascalToKebabCaseAlt(this string source)
+        public static string PascalToKebabCase(this string value, bool numberDashing = true, CultureInfo? cultureInfo = null)
         {
-            if (source.Length == 0) return string.Empty;
+            cultureInfo ??= CultureInfo.InvariantCulture;
+
+            if (value.Length == 0) return string.Empty;
 
             StringBuilder builder = new StringBuilder();
 
-            for (var i = 0; i < source.Length; i++)
+            for (var i = 0; i < value.Length; i++)
             {
-                if (char.IsLower(source[i])) // if current char is already lowercase
+                if (char.IsLower(value[i])) // if current char is already lowercase
                 {
-                    builder.Append(source[i]);
+                    builder.Append(value[i]);
                 }
                 else if (i == 0) // if current char is the first char
                 {
-                    builder.Append(char.ToLower(source[i]));
+                    builder.Append(char.ToLower(value[i], cultureInfo));
                 }
-                else if (char.IsDigit(source[i]) && !char.IsDigit(source[i - 1])) // if current char is a number and the previous is not
+                else if (char.IsDigit(value[i]) && !char.IsDigit(value[i - 1])) // if current char is a number and the previous is not
+                {
+                    if (numberDashing)
+                    {
+                        builder.Append('-');
+                    }
+
+                    builder.Append(value[i]);
+                }
+                else if (char.IsDigit(value[i])) // if current char is a number and previous is
+                {
+                    builder.Append(value[i]);
+                }
+                else if (char.IsLower(value[i - 1])) // if current char is upper and previous char is lower
                 {
                     builder.Append('-');
-                    builder.Append(source[i]);
+                    builder.Append(char.ToLower(value[i], cultureInfo));
                 }
-                else if (char.IsDigit(source[i])) // if current char is a number and previous is
+                else if (i + 1 == value.Length || char.IsUpper(value[i + 1])) // if current char is upper and next char doesn't exist or is upper
                 {
-                    builder.Append(source[i]);
-                }
-                else if (char.IsLower(source[i - 1])) // if current char is upper and previous char is lower
-                {
-                    builder.Append('-');
-                    builder.Append(char.ToLower(source[i]));
-                }
-                else if (i + 1 == source.Length || char.IsUpper(source[i + 1])) // if current char is upper and next char doesn't exist or is upper
-                {
-                    builder.Append(char.ToLower(source[i]));
+                    builder.Append(char.ToLower(value[i], cultureInfo));
                 }
                 else // if current char is upper and next char is lower
                 {
                     builder.Append('-');
-                    builder.Append(char.ToLower(source[i]));
+                    builder.Append(char.ToLower(value[i], cultureInfo));
                 }
             }
             return builder.ToString();
         }
 
         /// <summary>
-        /// Transform text to Snake case, for example, 'Hello World' or 'HelloWorld' becomes 'hello_world'
+        /// Transform a Pascal/Sentence/Title case string to Snake case'
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="value">The string to transform to snake case</param>
+        /// <param name="numberDashing">IF true, adds a dash at the start of digits</param>
+        /// <remarks>
+        /// By default, numbers are separated by an underscore, for example 'Hello World 1' or 'HelloWorld1' becomes 'hello_world_1'.
+        /// This behaviour can be controlled by the <paramref name="numberDashing"/> parameter.
+        /// </remarks>
         /// <returns>The input string in snake case</returns>
-        public static string ToSnakeCase(this string text)
+        public static string ToSnakeCase(this string value, bool numberDashing = true)
         {
-            if (string.IsNullOrEmpty(text))
+            if (value.Length == 0)
             {
-                return text;
+                return string.Empty;
             }
 
-            var builder = new StringBuilder(text.Length + Math.Min(2, text.Length / 5));
+            var builder = new StringBuilder(value.Length + Math.Min(2, value.Length / 5));
             var previousCategory = default(UnicodeCategory?);
 
-            for (var currentIndex = 0; currentIndex < text.Length; currentIndex++)
+            for (var currentIndex = 0; currentIndex < value.Length; currentIndex++)
             {
-                var currentChar = text[currentIndex];
+                var currentChar = value[currentIndex];
                 if (currentChar == '_')
                 {
                     builder.Append('_');
@@ -123,14 +105,21 @@ namespace Ocluse.LiquidSnow.Core.Extensions
                 {
                     case UnicodeCategory.UppercaseLetter:
                     case UnicodeCategory.TitlecaseLetter:
+                    case UnicodeCategory.DecimalDigitNumber:
                         if (previousCategory == UnicodeCategory.SpaceSeparator ||
                             previousCategory == UnicodeCategory.LowercaseLetter ||
+                            (previousCategory == UnicodeCategory.DecimalDigitNumber && currentCategory != UnicodeCategory.DecimalDigitNumber) ||
                             previousCategory != UnicodeCategory.DecimalDigitNumber &&
                             previousCategory != null &&
                             currentIndex > 0 &&
-                            currentIndex + 1 < text.Length &&
-                            char.IsLower(text[currentIndex + 1]))
+                            currentIndex + 1 < value.Length &&
+                            char.IsLower(value[currentIndex + 1])
+                            )
                         {
+                            if (currentCategory == UnicodeCategory.DecimalDigitNumber && !numberDashing)
+                            {
+                                break;
+                            }
                             builder.Append('_');
                         }
 
@@ -138,7 +127,7 @@ namespace Ocluse.LiquidSnow.Core.Extensions
                         break;
 
                     case UnicodeCategory.LowercaseLetter:
-                    case UnicodeCategory.DecimalDigitNumber:
+
                         if (previousCategory == UnicodeCategory.SpaceSeparator)
                         {
                             builder.Append('_');
@@ -163,27 +152,77 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         /// <summary>
         /// Adds spaces to a string that is in PascalCase.
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="preserveAcronyms"></param>
+        /// <param name="value">The string to which spaces are to be added</param>
+        /// <param name="preserveAcronyms">If true, spaces are not added between continuous strings of uppercase characters</param>
         /// <remarks>
-        /// Taken from https://stackoverflow.com/a/272929/6701056
+        /// <para>
+        /// For example, 'WhereIsMyMotherSKL' becomes 'Where Is My Mother SKL'.
+        /// </para>
+        /// <para>
+        /// Taken from https://stackoverflow.com/a/272929
+        /// </para>
         /// </remarks>
-        public static string PascalToSpacedSentence(this string text, bool preserveAcronyms)
+        public static string AddSpacesToPascalCaseString(this string value, bool preserveAcronyms = true)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(value))
                 return string.Empty;
-            StringBuilder newText = new StringBuilder(text.Length * 2);
-            newText.Append(text[0]);
-            for (int i = 1; i < text.Length; i++)
+            StringBuilder newText = new StringBuilder(value.Length * 2);
+            newText.Append(value[0]);
+            for (int i = 1; i < value.Length; i++)
             {
-                if (char.IsUpper(text[i]))
-                    if ((text[i - 1] != ' ' && !char.IsUpper(text[i - 1])) ||
-                        (preserveAcronyms && char.IsUpper(text[i - 1]) &&
-                         i < text.Length - 1 && !char.IsUpper(text[i + 1])))
+                if (char.IsUpper(value[i]))
+                    if ((value[i - 1] != ' ' && !char.IsUpper(value[i - 1])) ||
+                        (preserveAcronyms && char.IsUpper(value[i - 1]) &&
+                         i < value.Length - 1 && !char.IsUpper(value[i + 1])))
                         newText.Append(' ');
-                newText.Append(text[i]);
+                newText.Append(value[i]);
             }
             return newText.ToString();
+        }
+
+        /// <summary>
+        /// Converts an uppercase/lowercase string to the Sentence case.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// For example, 'hello world. WHERE IS MY MOTHER' becomes 'Hello world. Where is my mother'
+        /// </para>
+        /// <para>
+        /// Solution sourced from https://stackoverflow.com/a/3141467
+        /// </para>
+        /// </remarks>
+        /// <returns></returns>
+        public static string ToSentenceCase(this string value, CultureInfo? cultureInfo = null)
+        {
+            cultureInfo ??= CultureInfo.InvariantCulture;
+
+            // start by converting entire string to lower case
+            var lowerCase = value.ToLower(cultureInfo);
+
+            // matches the first sentence of a string, as well as subsequent sentences
+            var r = new Regex(@"(^[a-z])|\.\s+(.)", RegexOptions.ExplicitCapture);
+
+            // MatchEvaluator delegate defines replacement of sentence starts to uppercase
+            var result = r.Replace(lowerCase, s => s.Value.ToUpper(cultureInfo));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Converts an uppercase/lowercase string to the Title case using the specified culture.
+        /// </summary>
+        /// <remarks>
+        /// For example, 'WHERE IS MY MOTHER' becomes 'Where Is My Mother'
+        /// </remarks>
+        /// <param name="value">The string</param>
+        /// <param name="cultureInfo">The culture to use, if unspecified, uses the invariant culture.</param>
+        /// <returns></returns>
+        public static string ToTitleCase(this string value, CultureInfo? cultureInfo = null)
+        {
+            cultureInfo ??= CultureInfo.InvariantCulture;
+
+            TextInfo textInfo = cultureInfo.TextInfo;
+            return textInfo.ToTitleCase(value.ToLower(cultureInfo));
         }
     }
 }
