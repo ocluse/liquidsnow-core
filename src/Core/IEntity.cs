@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Ocluse.LiquidSnow.Core.Events;
+using System;
+using System.Collections.Generic;
 
 namespace Ocluse.LiquidSnow.Core
 {
@@ -16,6 +18,29 @@ namespace Ocluse.LiquidSnow.Core
         /// The timestamp when this entity was first created
         /// </summary>
         DateTime DateCreated { get; }
+
+        /// <summary>
+        /// Attaches an event to the entity
+        /// </summary>
+        /// <param name="ev">The event to add</param>
+        void AddAttachedEvent(IEvent ev);
+
+        /// <summary>
+        /// Removes a previously attached event on the en
+        /// </summary>
+        /// <param name="ev">The event to remove</param>
+        void RemoveAttachedEvent(IEvent ev);
+
+        /// <summary>
+        /// Removes all events that have been attached on the entity
+        /// </summary>
+        void ClearAttachedEvents();
+
+        /// <summary>
+        /// Returns a list of currently attached events
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<IEvent> GetAttachedEvents();
     }
 
     ///<inheritdoc cref="IEntity"/>
