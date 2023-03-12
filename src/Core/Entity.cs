@@ -14,37 +14,27 @@ namespace Ocluse.LiquidSnow.Core
 
         ///<inheritdoc cref="IEntity.DateCreated"/>
         public abstract DateTime DateCreated { get; set; }
+        
+        ///<inheritdoc cref="IEntity.AddAttachedEvent(IEvent)"/>
 
-        /// <summary>
-        /// Attaches an event to the entity
-        /// </summary>
-        /// <param name="ev">The event to add</param>
         public void AddAttachedEvent(IEvent ev)
         {
             _attachedEvents.Add(ev);
         }
 
-        /// <summary>
-        /// Removes a previously attached event on the en
-        /// </summary>
-        /// <param name="ev">The event to remove</param>
+        ///<inheritdoc cref="IEntity.RemoveAttachedEvent(IEvent)"/>
         public void RemoveAttachedEvent(IEvent ev)
         {
             _attachedEvents.Remove(ev);
         }
 
-        /// <summary>
-        /// Removes all events that have been attached on the entity
-        /// </summary>
+        ///<inheritdoc cref="IEntity.ClearAttachedEvents"/>
         public void ClearAttachedEvents()
         {
             _attachedEvents.Clear();
         }
 
-        /// <summary>
-        /// Returns a list of currently attached events
-        /// </summary>
-        /// <returns></returns>
+        ///<inheritdoc cref="IEntity.GetAttachedEvents"/>
 
         public IReadOnlyList<IEvent> GetAttachedEvents()
         {
