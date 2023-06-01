@@ -12,12 +12,12 @@ namespace Ocluse.LiquidSnow.Core
         /// <summary>
         /// The unique identifier of this entity
         /// </summary>
-        string Id { get; }
+        string Id { get; set; }
 
         /// <summary>
         /// The timestamp when this entity was first created
         /// </summary>
-        DateTime DateCreated { get; }
+        DateTime DateCreated { get; set; }
 
         /// <summary>
         /// Attaches an event to the entity
