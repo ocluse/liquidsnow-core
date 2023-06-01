@@ -8,6 +8,6 @@
         /// <summary>
         /// THe unique identifier of the model
         /// </summary>
-        string Id { get; }
+        string Id { get; set; }
     }
 }
