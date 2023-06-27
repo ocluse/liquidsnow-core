@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <Version>0.0.9</Version>
+	  <Version>0.1.4</Version>
 	  <Authors>Ocluse</Authors>
 	  <PackageOutputPath>..\..\build</PackageOutputPath>
 	  <Description>Provides a basic mediator pattern implementation for use with CQRS pattern provided in Ocluse.LiquidSnow.Core.</Description>
