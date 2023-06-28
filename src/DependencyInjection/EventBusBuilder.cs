@@ -1,0 +1,44 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using Ocluse.LiquidSnow.Core.Events;
+using System.Collections.Generic;
+using System.Reflection;
+
+namespace Ocluse.LiquidSnow.Core.DependencyInjection
+{
+    /// <summary>
+    /// Builder for adding event handlers to the service collection.
+    /// </summary>
+    public class EventBusBuilder
+    {
+        private readonly ServiceLifetime _handlerLifetime;
+        
+        /// <summary>
+        /// Gets the service collection where the handlers are configured.
+        /// </summary>
+        public IServiceCollection Services { get; }
+        
+        internal EventBusBuilder(ServiceLifetime handlerLifetime, IServiceCollection services)
+        {
+            _handlerLifetime = handlerLifetime;
+            Services = services;
+        }
+
+        ///<inheritdoc cref="AddHandlers(IEnumerable{Assembly})"/>
+        public EventBusBuilder AddHandlers(params Assembly[] assemblies)
+        {
+            return AddHandlers(assemblies);
+        }
+
+        /// <summary>
+        /// Adds event handlers from the provided assemblies.
+        /// </summary>
+        public EventBusBuilder AddHandlers(IEnumerable<Assembly> assemblies)
+        {
+            foreach (var assembly in assemblies)
+            {
+                Services.AddImplementers(typeof(IEventHandler<>), assembly, _handlerLifetime, false);
+            }
+            return this;
+        }
+    }
+}

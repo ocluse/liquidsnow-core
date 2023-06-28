@@ -136,7 +136,7 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         }
 
         /// <summary>
-        /// Returns a random item from the sequence. If the seqeunce is empty, an exception is thrown.
+        /// Returns a random item from the sequence. If the sequence is empty, an exception is thrown.
         /// </summary>
         public static T Random<T>(this IEnumerable<T> source, Func<T, bool> expression)
         {
