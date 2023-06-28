@@ -11,6 +11,7 @@ using System.Reflection;
 
 namespace Ocluse.LiquidSnow.Core.DependencyInjection
 {
+
     /// <summary>
     /// Extension methods to add CQRS handlers and dispatchers to a DI container.
     /// </summary>
@@ -20,7 +21,7 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
         /// <summary>
         /// Adds CQRS handlers from the provided assemblies using default configuration.
         /// </summary>
-        public static IServiceCollection AddCqrs(this IServiceCollection services, params Assembly[] assemblies)
+        public static CqrsBuilder AddCqrs(this IServiceCollection services, params Assembly[] assemblies)
         {
             return services.AddCqrs(options =>
             {
@@ -34,7 +35,7 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
         /// <summary>
         /// Adds CQRS handlers using the provided options
         /// </summary>
-        public static IServiceCollection AddCqrs(this IServiceCollection services, Action<CqrsOptions> configureOptions)
+        public static CqrsBuilder AddCqrs(this IServiceCollection services, Action<CqrsOptions> configureOptions)
         {
             CqrsOptions options = new CqrsOptions();
 
@@ -52,13 +53,9 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
             services.TryAdd(commandDispatcherDescriptor);
             services.TryAdd(queryDispatcherDescriptor);
 
-            foreach (var assembly in options.Assemblies)
-            {
-                services.AddImplementers(typeof(IQueryHandler<,>), assembly, options.HandlerLifetime);
-                services.AddImplementers(typeof(ICommandHandler<,>), assembly, options.HandlerLifetime);
-            }
+            CqrsBuilder builder = new CqrsBuilder(options.HandlerLifetime, services);
 
-            return services;
+            return builder.AddHandlers(options.Assemblies);
         }
         #endregion
 
@@ -66,7 +63,7 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
         /// <summary>
         /// Adds the Event Bus and event handlers from the provided assemblies using the default configuration
         /// </summary>
-        public static IServiceCollection AddEventBus(this IServiceCollection services, params Assembly[] assemblies)
+        public static EventBusBuilder AddEventBus(this IServiceCollection services, params Assembly[] assemblies)
         {
             return services.AddEventBus(options =>
             {
@@ -77,7 +74,7 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
         /// <summary>
         /// Adds the Event Bus and event handlers using the provided options.
         /// </summary>
-        public static IServiceCollection AddEventBus(this IServiceCollection services, Action<EventBusOptions> configureOptions)
+        public static EventBusBuilder AddEventBus(this IServiceCollection services, Action<EventBusOptions> configureOptions)
         {
             EventBusOptions options = new EventBusOptions();
             configureOptions.Invoke(options);
@@ -91,23 +88,20 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
 
             services.TryAdd(eventBusDescriptor);
 
-            foreach (var assembly in options.Assemblies)
-            {
-                services.AddImplementers(typeof(IEventHandler<>), assembly, options.HandlerLifetime, false);
-            }
-
             //Add publishing strategy
             PublishStrategyConfig publishStrategyConfig = new PublishStrategyConfig(options.PublishStrategy);
 
             services.TryAddSingleton(publishStrategyConfig);
 
-            return services;
+            EventBusBuilder builder = new EventBusBuilder(options.HandlerLifetime, services);
+
+            return builder.AddHandlers(options.Assemblies);
         }
 
 
         #endregion
 
-        private static IServiceCollection AddImplementers(this IServiceCollection services, Type type, Assembly assembly, ServiceLifetime lifetime, bool ignoreDuplicates = true)
+        internal static IServiceCollection AddImplementers(this IServiceCollection services, Type type, Assembly assembly, ServiceLifetime lifetime, bool ignoreDuplicates = true)
         {
             List<ServiceDescriptor> descriptors = new List<ServiceDescriptor>();
             assembly.GetTypes()

@@ -92,8 +92,21 @@ namespace Ocluse.LiquidSnow.Core.Extensions
             }
         }
 
+        /// <inheritdoc cref="Shuffle{T}(IList{T})"/>
+        public static void Shuffle<T>(this IList<T> ts, int seed)
+        {
+            var count = ts.Count;
+            var last = count - 1;
+            for (var i = 0; i < last; ++i)
+            {
+                var random = new Random(seed);
+                var r = random.Next(i, count);
+                (ts[r], ts[i]) = (ts[i], ts[r]);
+            }
+        }
+
         /// <summary>
-        /// Rotates the items on a list i.e offsets the postitions of the items, wrapping where necessary
+        /// Rotates the items on a list i.e offsets the positions of the items, wrapping where necessary
         /// </summary>
         /// <param name="list">The list to perform the operation on</param>
         /// <param name="offset">How much to shift the items</param>
@@ -123,7 +136,7 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         }
 
         /// <summary>
-        /// Returns a random item from the sequence. If the seqeunce is empty, an exception is thrown.
+        /// Returns a random item from the sequence. If the sequence is empty, an exception is thrown.
         /// </summary>
         public static T Random<T>(this IEnumerable<T> source, Func<T, bool> expression)
         {
