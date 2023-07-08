@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Ocluse.LiquidSnow.Core.Events;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Ocluse.LiquidSnow.Core.DependencyInjection
@@ -26,7 +27,7 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
         ///<inheritdoc cref="AddHandlers(IEnumerable{Assembly})"/>
         public EventBusBuilder AddHandlers(params Assembly[] assemblies)
         {
-            return AddHandlers(assemblies);
+            return AddHandlers(assemblies.AsEnumerable());
         }
 
         /// <summary>
