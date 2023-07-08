@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Ocluse.LiquidSnow.Core.Cqrs;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Ocluse.LiquidSnow.Core.DependencyInjection
@@ -26,12 +27,7 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
         /// <inheritdoc cref="AddHandlers(IEnumerable{Assembly})"/>
         public CqrsBuilder AddHandlers(params Assembly[] assemblies)
         {
-            foreach (var assembly in assemblies)
-            {
-                Services.AddImplementers(typeof(IQueryHandler<,>), assembly, _handlerLifetime);
-                Services.AddImplementers(typeof(ICommandHandler<,>), assembly, _handlerLifetime);
-            }
-            return this;
+            return AddHandlers(assemblies.AsEnumerable());
         }
 
         /// <summary>
