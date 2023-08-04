@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <Version>0.0.1</Version>
+	  <Authors>Ocluse</Authors>
+	  <PackageOutputPath>..\..\build</PackageOutputPath>
+	  <Description>Provides utilities for performing orchestrations</Description>
+	  <PackageIcon>logo.png</PackageIcon>
+	  <RepositoryUrl>https://github.com/ocluse/liquidsnow-core</RepositoryUrl>
+	  <Copyright>© Ocluse</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Ocluse.LiquidSnow.Core.csproj" />
+    <ProjectReference Include="..\DependencyInjection\Ocluse.LiquidSnow.Core.DependencyInjection.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    </ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+</Project>
