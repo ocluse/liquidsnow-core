@@ -101,7 +101,10 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
 
         #endregion
 
-        internal static IServiceCollection AddImplementers(this IServiceCollection services, Type type, Assembly assembly, ServiceLifetime lifetime, bool ignoreDuplicates = true)
+        /// <summary>
+        /// Adds all types that implement the provided interface type from the provided assembly to the service collection.
+        /// </summary>
+        public static IServiceCollection AddImplementers(this IServiceCollection services, Type type, Assembly assembly, ServiceLifetime lifetime, bool ignoreDuplicates = true)
         {
             List<ServiceDescriptor> descriptors = new List<ServiceDescriptor>();
             assembly.GetTypes()
@@ -110,10 +113,13 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
                 .ToList()
                 .ForEach(assignedType =>
                 {
-                    var serviceType = assignedType.GetInterfaces().First(i => i.GetGenericTypeDefinition() == type);
-
-                    ServiceDescriptor descriptor = new ServiceDescriptor(serviceType, assignedType, lifetime);
-                    descriptors.Add(descriptor);
+                    var serviceTypes = assignedType.GetInterfaces().Where(i => i.GetGenericTypeDefinition() == type);
+                    
+                    foreach (var serviceType in serviceTypes)
+                    {
+                        ServiceDescriptor descriptor = new ServiceDescriptor(serviceType, assignedType, lifetime);
+                        descriptors.Add(descriptor);
+                    }
                 });
 
             if (ignoreDuplicates)
