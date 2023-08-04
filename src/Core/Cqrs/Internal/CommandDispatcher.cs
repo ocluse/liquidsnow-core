@@ -24,12 +24,9 @@ namespace Ocluse.LiquidSnow.Core.Cqrs.Internal
 
             object? handler = _serviceProvider.GetService(commandHandlerType);
 
-            if (handler == null)
-            {
-                throw new InvalidOperationException("Failed to get handler for command");
-            }
-
-            return (Task<TCommandResult>?)methodInfo.Invoke(handler, new object[] { command, cancellationToken }) ?? throw new InvalidOperationException("Illegal handle method");
+            return handler == null
+                ? throw new InvalidOperationException("Failed to get handler for command")
+                : (Task<TCommandResult>?)methodInfo.Invoke(handler, new object[] { command, cancellationToken }) ?? throw new InvalidOperationException("Illegal handle method");
         }
     }
 }
