@@ -18,7 +18,7 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations
         /// <summary>
         /// Execute the step.
         /// </summary>
-        Task<OrchestrationStepResult> Execute(IOrchestrationData<T> data, CancellationToken cancellationToken = default);
+        Task<IOrchestrationStepResult> Execute(IOrchestrationData<T> data, CancellationToken cancellationToken = default);
     }
 
     ///<inheritdoc cref="IOrchestrationStep{T, TResult}"/>

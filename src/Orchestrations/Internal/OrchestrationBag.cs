@@ -21,7 +21,14 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations.Internal
 
         public void Set<T>(string key, [AllowNull] T value)
         {
-            this[key] = value;
+            if (ContainsKey(key))
+            {
+                this[key] = value;
+            }
+            else
+            {
+                Add(key, value);
+            }
         }
     }
 }

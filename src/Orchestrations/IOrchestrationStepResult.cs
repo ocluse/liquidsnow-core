@@ -16,7 +16,7 @@
         object? Data { get; }
 
         /// <summary>
-        /// The order of the next step to execute. If not set, the next step is executed.
+        /// The order of the next step to execute. If not set, the next sequential step is executed.
         /// </summary>
         int? JumpToOrder { get; }
     }

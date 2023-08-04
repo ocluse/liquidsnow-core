@@ -15,7 +15,7 @@ namespace OrchestrationSample.OrchestrationSteps
             _logger = logger;
         }
 
-        public Task<OrchestrationStepResult> Execute(IOrchestrationData<SampleOrchestration> data, CancellationToken cancellationToken = default)
+        public Task<IOrchestrationStepResult> Execute(IOrchestrationData<SampleOrchestration> data, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Performing step 1");
             return Task.FromResult(OrchestrationStepResult.Success());

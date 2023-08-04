@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
+using Ocluse.LiquidSnow.Core.Cqrs;
 
 namespace Ocluse.LiquidSnow.Core.Orchestrations
 {
@@ -13,5 +14,11 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations
         /// Check if the step can be executed.
         /// </summary>
         Task<bool> CanExecute(IOrchestrationData<T> data, CancellationToken cancellationToken = default);
+    }
+
+    ///<inheritdoc cref="IConditionalOrchestrationStep{T, TResult}"/>
+    public interface IConditionalOrchestrationStep<in T> : IConditionalOrchestrationStep<T, Unit>
+        where T : IOrchestration
+    {
     }
 }

@@ -38,7 +38,7 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations
             foreach (var assembly in assemblies)
             {
                 Services.AddImplementers(typeof(IOrchestrationStep<,>), assembly, _stepLifetime, false);
-                Services.AddImplementers(typeof(IPreOrchestration<,>), assembly, _stepLifetime, false);
+                Services.AddImplementers(typeof(IPreliminaryOrchestrationStep<,>), assembly, _stepLifetime, false);
                 Services.AddImplementers(typeof(IFinalOrchestrationStep<,>), assembly, _stepLifetime, false);
             }
             return this;

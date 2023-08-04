@@ -13,7 +13,10 @@
         ///<inheritdoc cref="IOrchestrationStepResult.JumpToOrder"/>
         public int? JumpToOrder { get; }
 
-        internal OrchestrationStepResult(bool isSuccess, object? data, int? jumpToStep)
+        /// <summary>
+        /// Creates a new instance of <see cref="OrchestrationStepResult"/>.
+        /// </summary>
+        public OrchestrationStepResult(bool isSuccess, object? data, int? jumpToStep)
         {
             IsSuccess = isSuccess;
             Data = data;
@@ -23,7 +26,7 @@
         /// <summary>
         /// Returns a result indicating that the step was successfully executed.
         /// </summary>
-        public static OrchestrationStepResult Success(object? data = null, int? jumpToStep = null)
+        public static IOrchestrationStepResult Success(object? data = null, int? jumpToStep = null)
         {
             return new OrchestrationStepResult(true, data, jumpToStep);
         }
@@ -31,7 +34,7 @@
         /// <summary>
         /// Returns a result indicating that the step failed.
         /// </summary>
-        public static OrchestrationStepResult Failed(object? data = null, int? jumpToStep = null)
+        public static IOrchestrationStepResult Failed(object? data = null, int? jumpToStep = null)
         {
             return new OrchestrationStepResult(false, data, jumpToStep);
         }

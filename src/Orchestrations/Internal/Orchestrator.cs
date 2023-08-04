@@ -32,23 +32,27 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations.Internal
                 .OrderBy(x => x.Order)
                 .ToList();
 
-            if(steps.Count == 0)
+            if (steps.Count == 0)
             {
                 throw new InvalidOperationException($"No steps found for orchestration {orchestrationType.Name}");
             }
 
-            var preStep = _serviceProvider.GetService<IPreOrchestration<T, TResult>>();
+            var preliminaryStep = _serviceProvider.GetService<IPreliminaryOrchestrationStep<T, TResult>>();
 
-            var data = new OrchestrationData<T>(value, steps.Count);
+            var data = new OrchestrationData<T>(value);
 
             int order = steps[0].Order;
 
-            if (preStep != null)
+            RequiredState? previousState = null;
+
+            if (preliminaryStep != null)
             {
-                OrchestrationStepResult result = await preStep.Execute(data, cancellationToken);
-                data.Advance(result, null);
-                
-                if(result.JumpToOrder != null)
+                IOrchestrationStepResult result = await preliminaryStep.Execute(data, cancellationToken);
+                data.Advance(result);
+
+                previousState = result.IsSuccess ? RequiredState.Success : RequiredState.Failure;
+
+                if (result.JumpToOrder != null)
                 {
                     order = result.JumpToOrder.Value;
                 }
@@ -56,37 +60,48 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations.Internal
 
             while (true)
             {
-                IOrchestrationStep<T, TResult> step = steps.FirstOrDefault(x => x.Order == order) 
+                cancellationToken.ThrowIfCancellationRequested();
+
+                IOrchestrationStep<T, TResult> step = steps.FirstOrDefault(x => x.Order == order)
                     ?? throw new InvalidOperationException($"No step found with order {order}");
 
                 bool canExecute = true;
 
-                if (step is IConditionalOrchestrationStep<T, TResult> conditionalStep)
+                if (step is IStateDependentOrchestrationStep<T, TResult> stateDependentStep)
                 {
-                    canExecute = await conditionalStep.CanExecute(data, cancellationToken);
+                    canExecute = previousState == stateDependentStep.RequiredState;
                 }
-
-                int? jumpToOrder = null;
 
                 if (canExecute)
                 {
-                    OrchestrationStepResult result = await step.Execute(data, cancellationToken);
-                    jumpToOrder = result.JumpToOrder;
-                    data.Advance(result, null);
-                }
-               
-                if (jumpToOrder != null)
-                {
-                    order = jumpToOrder.Value;
-                }
-                else if (steps[^1] == step)
-                {
-                    break;
-                }
-                else
-                {
-                    // set order to the next step
-                    order = steps[steps.IndexOf(step) + 1].Order;
+                    if (step is IConditionalOrchestrationStep<T, TResult> conditionalStep)
+                    {
+                        canExecute = await conditionalStep.CanExecute(data, cancellationToken);
+                    }
+
+                    int? jumpToOrder = null;
+
+                    if (canExecute)
+                    {
+                        IOrchestrationStepResult result = await step.Execute(data, cancellationToken);
+                        jumpToOrder = result.JumpToOrder;
+                        data.Advance(result);
+                        previousState = result.IsSuccess ? RequiredState.Success : RequiredState.Failure;
+                    }
+
+                    if (jumpToOrder != null)
+                    {
+                        order = jumpToOrder.Value;
+                    }
+                    else if (steps[^1] == step)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        // set order to the next step
+                        order = steps[steps.IndexOf(step) + 1].Order;
+                    }
                 }
             }
 
@@ -98,6 +113,10 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations.Internal
             }
             else
             {
+                if (data.Results.Count == 0)
+                {
+                    throw new InvalidOperationException($"The orchestration {orchestrationType.Name} produced no results after completion.");
+                }
                 if (data.Results[^1] is TResult result)
                 {
                     return result;

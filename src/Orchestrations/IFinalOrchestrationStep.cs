@@ -1,11 +1,15 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
+using Ocluse.LiquidSnow.Core.Cqrs;
 
 namespace Ocluse.LiquidSnow.Core.Orchestrations
 {
     /// <summary>
-    /// The final step of an orchestration. This step is always executed.
+    /// The final step of an orchestration.
     /// </summary>
+    /// <remarks>
+    /// This step is expected to return the final result of the orchestration that is returned to the caller.
+    /// </remarks>
     public interface IFinalOrchestrationStep<in T, TResult>
         where T : IOrchestration<TResult>
     {
@@ -15,15 +19,9 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations
         Task<TResult> Execute(IOrchestrationData<T> data, CancellationToken cancellationToken = default);
     }
 
-    /// <summary>
-    /// The first step of an orchestration. This step is always executed.
-    /// </summary>
-    public interface IPreOrchestration<in T, TResult>
-        where T : IOrchestration<TResult>
+    ///<inheritdoc cref="IFinalOrchestrationStep{T, TResult}"/>
+    public interface IFinalOrchestrationStep<in T> : IFinalOrchestrationStep<T, Unit>
+        where T : IOrchestration
     {
-        /// <summary>
-        /// Execute the step.
-        /// </summary>
-        Task<OrchestrationStepResult> Execute(IOrchestrationData<T> data, CancellationToken cancellationToken = default);
     }
 }
