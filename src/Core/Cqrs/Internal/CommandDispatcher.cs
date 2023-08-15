@@ -10,23 +10,11 @@ namespace Ocluse.LiquidSnow.Core.Cqrs.Internal
 
         public CommandDispatcher(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
-        public Task<TCommandResult> Dispatch<TCommandResult>(ICommand<TCommandResult> command, CancellationToken cancellationToken)
+        public async Task<TCommandResult> Dispatch<TCommandResult>(ICommand<TCommandResult> command, CancellationToken cancellationToken)
         {
-            Type commandType = command.GetType();
+            ExecutionDescriptor descriptor = ExecutionsHelper.GetDescriptor<TCommandResult>(ExecutionKind.Command, command);
 
-            Type[] typeArgs = { commandType, typeof(TCommandResult) }; 
-
-            Type commandHandlerType = typeof(ICommandHandler<,>).MakeGenericType(typeArgs);
-
-            Type[] paramTypes = new Type[] { commandType, typeof(CancellationToken) };
-
-            var methodInfo = commandHandlerType.GetMethod("Handle", paramTypes) ?? throw new InvalidOperationException("Handle method not found on handler");
-
-            object? handler = _serviceProvider.GetService(commandHandlerType);
-
-            return handler == null
-                ? throw new InvalidOperationException("Failed to get handler for command")
-                : (Task<TCommandResult>?)methodInfo.Invoke(handler, new object[] { command, cancellationToken }) ?? throw new InvalidOperationException("Illegal handle method");
+            return await ExecutionsHelper.ExecuteDescriptor<TCommandResult>(command, descriptor, _serviceProvider, cancellationToken);
         }
     }
 }
