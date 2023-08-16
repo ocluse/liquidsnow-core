@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Ocluse.LiquidSnow.Core.Extensions
@@ -38,7 +39,7 @@ namespace Ocluse.LiquidSnow.Core.Extensions
         /// <remarks>
         /// Solution sourced from StackOverFlow => https://stackoverflow.com/questions/18303897/test-if-all-values-in-a-list-are-unique
         /// </remarks>
-        public static bool HasDuplicate<T>(this IEnumerable<T> source, out T firstDuplicate)
+        public static bool HasDuplicate<T>(this IEnumerable<T> source, [MaybeNull] out T firstDuplicate)
         {
             if (source == null)
             {
@@ -57,7 +58,7 @@ namespace Ocluse.LiquidSnow.Core.Extensions
                 return true;
             }
 
-            firstDuplicate = default(T);
+            firstDuplicate = default;
             return false;
         }
 

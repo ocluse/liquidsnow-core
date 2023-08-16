@@ -39,6 +39,10 @@ namespace Ocluse.LiquidSnow.Core.DependencyInjection
             {
                 Services.AddImplementers(typeof(IQueryHandler<,>), assembly, _handlerLifetime);
                 Services.AddImplementers(typeof(ICommandHandler<,>), assembly, _handlerLifetime);
+                Services.AddImplementers(typeof(IPreCommandExecutionHandler<,>) , assembly, _handlerLifetime);
+                Services.AddImplementers(typeof(IPostCommandExecutionHandler<,>), assembly, _handlerLifetime);
+                Services.AddImplementers(typeof(IPreQueryExecutionHandler<,>), assembly, _handlerLifetime);
+                Services.AddImplementers(typeof(IPostQueryExecutionHandler<,>), assembly, _handlerLifetime);
             }
             return this;
         }

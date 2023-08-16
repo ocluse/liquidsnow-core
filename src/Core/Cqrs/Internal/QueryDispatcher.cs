@@ -10,27 +10,11 @@ namespace Ocluse.LiquidSnow.Core.Cqrs.Internal
 
         public QueryDispatcher(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
-        public Task<TQueryResult> Dispatch<TQueryResult>(IQuery<TQueryResult> query, CancellationToken cancellationToken)
+        public async Task<TQueryResult> Dispatch<TQueryResult>(IQuery<TQueryResult> query, CancellationToken cancellationToken)
         {
-            Type queryType = query.GetType();
+            ExecutionDescriptor descriptor = ExecutionsHelper.GetDescriptor<TQueryResult>(ExecutionKind.Query, query);
 
-            Type[] typeArgs = { queryType, typeof(TQueryResult) };
-
-            Type queryHandlerType = typeof(IQueryHandler<,>).MakeGenericType(typeArgs);
-
-            Type[] paramTypes = new Type[] { queryType, typeof(CancellationToken) };
-
-            var methodInfo = queryHandlerType.GetMethod("Handle", paramTypes) ?? throw new InvalidOperationException("Handle method not found on handler");
-
-            var handler = _serviceProvider.GetService(queryHandlerType);
-
-            if (handler == null)
-            {
-                throw new InvalidOperationException("Failed to get handler for query");
-            }
-
-            return (Task<TQueryResult>?)methodInfo.Invoke(handler, new object[] { query, cancellationToken }) ?? throw new InvalidOperationException("Illegal handle method");
-
+            return await ExecutionsHelper.ExecuteDescriptor<TQueryResult>(query, descriptor, _serviceProvider, cancellationToken);
         }
     }
 }
