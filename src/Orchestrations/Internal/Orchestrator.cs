@@ -17,6 +17,15 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations.Internal
             _serviceProvider = serviceProvider;
         }
 
+        private static T ReturnAsResult<T>(object? data)
+        {
+            if (data is T result)
+            {
+                return result;
+            }
+            throw new InvalidCastException($"The data returned by the orchestration is not of type {typeof(T).Name}");
+        }
+
         private async Task<TResult> Execute<T, TResult>(T value, CancellationToken cancellationToken = default)
             where T : IOrchestration<TResult>
         {
@@ -48,6 +57,12 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations.Internal
             if (preliminaryStep != null)
             {
                 IOrchestrationStepResult result = await preliminaryStep.Execute(data, cancellationToken);
+
+                if(result is ISkipOrchestrationResult skip)
+                {
+                    return ReturnAsResult<TResult>(skip.Data);
+                }
+
                 data.Advance(result);
 
                 previousState = result.IsSuccess ? RequiredState.Success : RequiredState.Failure;
@@ -84,8 +99,14 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations.Internal
                     if (canExecute)
                     {
                         IOrchestrationStepResult result = await step.Execute(data, cancellationToken);
-                        jumpToOrder = result.JumpToOrder;
                         data.Advance(result);
+
+                        if(result is ISkipOrchestrationResult skip)
+                        {
+                            return ReturnAsResult<TResult>(skip.Data);
+                        }
+
+                        jumpToOrder = result.JumpToOrder;
                         previousState = result.IsSuccess ? RequiredState.Success : RequiredState.Failure;
                     }
 
@@ -117,14 +138,8 @@ namespace Ocluse.LiquidSnow.Core.Orchestrations.Internal
                 {
                     throw new InvalidOperationException($"The orchestration {orchestrationType.Name} produced no results after completion.");
                 }
-                if (data.Results[^1] is TResult result)
-                {
-                    return result;
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Final step did not return a result of type {typeof(TResult).Name}");
-                }
+
+                return ReturnAsResult<TResult>(data.Results[^1]);
             }
         }
 

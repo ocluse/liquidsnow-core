@@ -20,4 +20,14 @@
         /// </summary>
         int? JumpToOrder { get; }
     }
+
+    /// <summary>
+    /// A result indicating that the rest of the orchestration should be skipped.
+    /// </summary>
+    /// <remarks>
+    /// The data returned by this result will be the final result of the orchestration.
+    /// </remarks>
+    public interface ISkipOrchestrationResult : IOrchestrationStepResult
+    {
+    }
 }
